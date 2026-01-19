@@ -2,12 +2,14 @@
 MCP 协议 JSON Schema 定义
 定义工具的输入输出规范
 """
-from typing import Dict, Any, List, Optional
+
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class JSONSchemaType(str, Enum):
     """JSON Schema 类型"""
+
     STRING = "string"
     INTEGER = "integer"
     NUMBER = "number"
@@ -29,7 +31,7 @@ def create_schema(
 ) -> Dict[str, Any]:
     """
     创建 JSON Schema 对象
-    
+
     Args:
         type_: 数据类型
         description: 描述
@@ -39,12 +41,12 @@ def create_schema(
         enum: 枚举值列表
         default: 默认值
         **kwargs: 其他 Schema 属性
-        
+
     Returns:
         JSON Schema 字典
     """
     schema = {"type": type_}
-    
+
     if description:
         schema["description"] = description
     if properties:
@@ -57,7 +59,7 @@ def create_schema(
         schema["enum"] = enum
     if default is not None:
         schema["default"] = default
-    
+
     schema.update(kwargs)
     return schema
 
@@ -66,32 +68,29 @@ def create_tool_schema(
     name: str,
     description: str,
     parameters: Dict[str, Any],
-    returns: Dict[str, Any] = None
+    returns: Dict[str, Any] = None,
 ) -> Dict[str, Any]:
     """
     创建 MCP 工具 Schema
-    
+
     Args:
         name: 工具名称
         description: 工具描述
         parameters: 输入参数 Schema
         returns: 返回值 Schema
-        
+
     Returns:
         完整的工具 Schema
     """
     schema = {
         "name": name,
         "description": description,
-        "inputSchema": {
-            "type": "object",
-            **parameters
-        }
+        "inputSchema": {"type": "object", **parameters},
     }
-    
+
     if returns:
         schema["outputSchema"] = returns
-    
+
     return schema
 
 
@@ -104,25 +103,25 @@ BOOLEAN_SCHEMA = {"type": "boolean"}
 DATE_SCHEMA = {
     "type": "string",
     "pattern": r"^\d{4}-\d{2}-\d{2}$",
-    "description": "日期格式: YYYY-MM-DD"
+    "description": "日期格式: YYYY-MM-DD",
 }
 
 DATETIME_SCHEMA = {
     "type": "string",
     "pattern": r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}",
-    "description": "ISO 8601 日期时间格式"
+    "description": "ISO 8601 日期时间格式",
 }
 
 CITY_SCHEMA = {
     "type": "string",
     "description": "城市名称（中文）",
     "minLength": 2,
-    "maxLength": 20
+    "maxLength": 20,
 }
 
 STATION_SCHEMA = {
     "type": "string",
     "description": "火车站名称",
     "minLength": 2,
-    "maxLength": 20
+    "maxLength": 20,
 }

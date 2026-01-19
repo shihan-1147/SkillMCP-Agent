@@ -21,13 +21,13 @@ results = await rag.retrieve("什么是 AI Agent?", top_k=5)
 ```
 """
 
+from .chunker import ChunkStrategy, TextChunker
 from .document import Document, DocumentChunk, RetrievalResult
-from .loader import DocumentLoader
-from .chunker import TextChunker, ChunkStrategy
 from .embedder import Embedder, get_embedder
-from .store import VectorStore, FAISSStore
-from .retriever import Retriever
+from .loader import DocumentLoader
 from .pipeline import RAGPipeline, get_rag_pipeline
+from .retriever import Retriever
+from .store import FAISSStore, VectorStore
 
 __all__ = [
     "Document",

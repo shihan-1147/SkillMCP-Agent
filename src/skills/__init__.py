@@ -1,13 +1,12 @@
 # Skills module
 from .base import BaseSkill
-from .registry import SkillRegistry, skill_registry
 from .direct_answer import DirectAnswerSkill
-
+from .knowledge import KnowledgeSearchSkill
+from .registry import SkillRegistry, skill_registry
+from .summarize import SummarizeSkill
 # Import skill modules
 from .travel import TravelQuerySkill
 from .weather import WeatherQuerySkill
-from .knowledge import KnowledgeSearchSkill
-from .summarize import SummarizeSkill
 
 __all__ = [
     # Base

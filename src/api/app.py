@@ -3,16 +3,18 @@ FastAPI 应用工厂
 
 创建并配置 FastAPI 应用
 """
+
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
+from src.api.chat_service import get_chat_service
+from src.api.routes import api_router
 from src.core.config import get_settings
 from src.core.logging import get_logger
-from src.api.routes import api_router
-from src.api.chat_service import get_chat_service
 
 logger = get_logger("api.app")
 
@@ -21,18 +23,20 @@ logger = get_logger("api.app")
 async def lifespan(app: FastAPI) -> AsyncGenerator:
     """
     应用生命周期管理
-    
+
     - startup: 初始化服务
     - shutdown: 清理资源
     """
     # ========== Startup ==========
     logger.info("🚀 Starting SkillMCP-Agent API...")
-    
+
     settings = get_settings()
-    
+
     # 初始化 MCP Client Manager（连接外部 MCP Server）
     try:
-        from src.mcp.mcp_client import initialize_mcp_client, get_mcp_client_manager
+        from src.mcp.mcp_client import (get_mcp_client_manager,
+                                        initialize_mcp_client)
+
         mcp_manager = await initialize_mcp_client()
         app.state.mcp_client = mcp_manager
         servers = mcp_manager.list_available_servers()
@@ -40,7 +44,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     except Exception as e:
         logger.warning(f"⚠️ MCP Client initialization failed: {e}")
         app.state.mcp_client = None
-    
+
     # 初始化聊天服务（会自动初始化 MCP 和 RAG）
     try:
         chat_service = get_chat_service()
@@ -48,37 +52,40 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
         logger.info("✅ ChatService initialized")
     except Exception as e:
         logger.error(f"❌ ChatService initialization failed: {e}")
-    
+
     logger.info(f"🌐 API ready at http://{settings.api_host}:{settings.api_port}")
-    logger.info(f"📚 Docs available at http://{settings.api_host}:{settings.api_port}/docs")
-    
+    logger.info(
+        f"📚 Docs available at http://{settings.api_host}:{settings.api_port}/docs"
+    )
+
     yield
-    
+
     # ========== Shutdown ==========
     logger.info("🛑 Shutting down SkillMCP-Agent API...")
-    
+
     # 关闭 MCP Client
-    if hasattr(app.state, 'mcp_client') and app.state.mcp_client:
+    if hasattr(app.state, "mcp_client") and app.state.mcp_client:
         await app.state.mcp_client.close()
         logger.info("✅ MCP Client closed")
-    
+
     # 清理会话
     from src.api.session import get_session_manager
+
     session_manager = get_session_manager()
     await session_manager.clear_all()
-    
+
     logger.info("👋 Goodbye!")
 
 
 def create_app() -> FastAPI:
     """
     创建 FastAPI 应用
-    
+
     Returns:
         配置完成的 FastAPI 应用实例
     """
     settings = get_settings()
-    
+
     # 创建应用
     app = FastAPI(
         title=settings.project_name,
@@ -121,7 +128,7 @@ print(response.json())
         openapi_url="/openapi.json",
         lifespan=lifespan,
     )
-    
+
     # 配置 CORS
     app.add_middleware(
         CORSMiddleware,
@@ -130,10 +137,10 @@ print(response.json())
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
+
     # 注册路由
     app.include_router(api_router, prefix="/api/v1")
-    
+
     # 根路由
     @app.get("/", tags=["Root"])
     async def root():
@@ -145,7 +152,7 @@ print(response.json())
             "health": "/api/v1/health",
             "chat": "/api/v1/chat",
         }
-    
+
     return app
 
 
@@ -153,32 +160,27 @@ def custom_openapi(app: FastAPI):
     """自定义 OpenAPI Schema"""
     if app.openapi_schema:
         return app.openapi_schema
-    
+
     openapi_schema = get_openapi(
         title=app.title,
         version=app.version,
         description=app.description,
         routes=app.routes,
     )
-    
+
     # 添加自定义标签
     openapi_schema["tags"] = [
-        {
-            "name": "对话",
-            "description": "聊天相关接口，支持多轮对话"
-        },
-        {
-            "name": "健康检查",
-            "description": "服务状态检查接口"
-        },
+        {"name": "对话", "description": "聊天相关接口，支持多轮对话"},
+        {"name": "健康检查", "description": "服务状态检查接口"},
     ]
-    
+
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
 
 # 创建应用实例
 app = create_app()
+
 
 # 获取应用实例的便捷函数
 def get_app() -> FastAPI:
