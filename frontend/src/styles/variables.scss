@@ -1,0 +1,90 @@
+/**
+ * 全局样式变量
+ */
+
+// 颜色系统
+$primary-color: #409eff;
+$success-color: #67c23a;
+$warning-color: #e6a23c;
+$danger-color: #f56c6c;
+$info-color: #909399;
+
+// 背景色
+$bg-color: #f5f7fa;
+$bg-color-dark: #1d1e1f;
+$card-bg: #ffffff;
+$card-bg-dark: #2c2c2c;
+
+// 文字颜色
+$text-primary: #303133;
+$text-regular: #606266;
+$text-secondary: #909399;
+$text-placeholder: #c0c4cc;
+
+// 边框
+$border-color: #dcdfe6;
+$border-radius: 8px;
+$border-radius-lg: 12px;
+
+// 阴影
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+// 间距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// 动画
+$transition-fast: 0.15s ease;
+$transition-normal: 0.25s ease;
+$transition-slow: 0.35s ease;
+
+// Agent 相关颜色
+$agent-planner: #9b59b6;
+$agent-executor: #3498db;
+$agent-skill: #2ecc71;
+$agent-mcp: #e67e22;
+$agent-rag: #1abc9c;
+
+// CSS 变量导出
+:root {
+  --primary-color: #{$primary-color};
+  --success-color: #{$success-color};
+  --warning-color: #{$warning-color};
+  --danger-color: #{$danger-color};
+  --info-color: #{$info-color};
+  
+  --bg-color: #{$bg-color};
+  --card-bg: #{$card-bg};
+  --text-primary: #{$text-primary};
+  --text-regular: #{$text-regular};
+  --text-secondary: #{$text-secondary};
+  
+  --border-color: #{$border-color};
+  --border-radius: #{$border-radius};
+  --border-radius-lg: #{$border-radius-lg};
+  
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  
+  --agent-planner: #{$agent-planner};
+  --agent-executor: #{$agent-executor};
+  --agent-skill: #{$agent-skill};
+  --agent-mcp: #{$agent-mcp};
+  --agent-rag: #{$agent-rag};
+}
+
+// 暗色主题
+.dark-mode {
+  --bg-color: #{$bg-color-dark};
+  --card-bg: #{$card-bg-dark};
+  --text-primary: #e5eaf3;
+  --text-regular: #cfd3dc;
+  --text-secondary: #a3a6ad;
+  --border-color: #4c4d4f;
+}

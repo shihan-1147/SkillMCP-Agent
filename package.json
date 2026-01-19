@@ -1,0 +1,16 @@
+{
+  "name": "skillmcp-agent",
+  "version": "0.1.0",
+  "description": "SkillMCP-Agent 全栈项目",
+  "private": true,
+  "scripts": {
+    "dev:backend": "python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "install:frontend": "cd frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
