@@ -89,3 +89,6 @@ Thumbs.db
 *.faiss
 *.pkl
 tool_calls.json
+test_output.json
+README_OLD.md
+.vite/
